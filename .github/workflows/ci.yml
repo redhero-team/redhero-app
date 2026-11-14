@@ -1,0 +1,56 @@
+name: CI
+
+# Uruchamiane przy każdym PR i po każdym merge'u do main
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: Lint i testy
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: postgres:16
+        env:
+          POSTGRES_DB: redhero
+          POSTGRES_USER: redhero
+          POSTGRES_PASSWORD: redhero
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DJANGO_DEBUG: "True"
+      DJANGO_SECRET_KEY: ci-tylko-do-testow
+      POSTGRES_HOST: localhost
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Instalacja zależności
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint (ruff check)
+        run: ruff check .
+
+      - name: Formatowanie (ruff format --check)
+        run: ruff format --check .
+
+      - name: Brakujące migracje
+        run: python manage.py makemigrations --check --dry-run
+
+      - name: Testy z pokryciem
+        run: pytest

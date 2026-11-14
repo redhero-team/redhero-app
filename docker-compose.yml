@@ -1,0 +1,40 @@
+# Uruchomienie całej aplikacji jednym poleceniem (W9):
+#   docker compose up --build
+# Aplikacja: http://localhost:8000
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-redhero}
+      POSTGRES_USER: ${POSTGRES_USER:-redhero}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-redhero}
+    volumes:
+      # Dane bazy przetrwają restart kontenera (W2)
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # Wartości domyślne, gdy ktoś nie skopiował jeszcze .env
+      DJANGO_DEBUG: ${DJANGO_DEBUG:-True}
+      POSTGRES_HOST: db
+    ports:
+      - "8000:8000"
+    volumes:
+      # Kod z dysku montowany do kontenera: zmiany widać od razu, bez przebudowy
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
