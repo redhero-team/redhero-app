@@ -1,2 +1,52 @@
+# --- System operacyjny ---
 # macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
+# Windows
+Thumbs.db
+desktop.ini
+
+# --- Edytory / IDE ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Środowiska wirtualne
+.venv/
+venv/
+env/
+
+# --- Sekrety i konfiguracja lokalna ---
+# W repo trzymamy tylko .env.example
+.env
+.env.*
+!.env.example
+
+# --- Django ---
+*.log
+db.sqlite3
+db.sqlite3-journal
+/staticfiles/
+/media/
+
+# --- Testy i pokrycie kodu ---
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# --- Narzędzia ---
+.ruff_cache/
+.mypy_cache/
