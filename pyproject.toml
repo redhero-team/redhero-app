@@ -1,0 +1,24 @@
+[project]
+name = "redhero-app"
+version = "0.1.0"
+requires-python = ">=3.12"
+
+# --- Linter i formatter (ADR-001) ---
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["**/migrations/*"]
+
+[tool.ruff.lint]
+# E/W = pycodestyle, F = pyflakes, I = sortowanie importów,
+# B = typowe błędy, UP = nowsza składnia Pythona, DJ = dobre praktyki Django
+select = ["E", "W", "F", "I", "B", "UP", "DJ"]
+
+# --- Testy i pokrycie kodu (W7) ---
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+testpaths = ["tests"]
+addopts = "--cov=redhero --cov-report=term-missing --cov-fail-under=60"
+
+[tool.coverage.run]
+omit = ["*/migrations/*"]
