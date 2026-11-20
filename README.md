@@ -5,6 +5,7 @@ My first commit done:
 - Krzysiek
 - Filip 
 - Dawid
+- Adrian
 
 ## Stos technologiczny
 
