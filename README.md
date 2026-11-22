@@ -53,3 +53,5 @@ docs/                   dokumentacja (ADR, procesy, Scrum)
 ```
 
 Zasada: widok wywołuje serwis, a serwis korzysta z modeli. Nigdy odwrotnie.
+
+Test
