@@ -2,23 +2,35 @@ name: Powiadomienie Teams o PR
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, reopened]
 
 jobs:
   notify-teams:
     runs-on: ubuntu-latest
     steps:
-      - name: Wyślij powiadomienie na Teams
+      - name: Wyślij kartę na Teams
         env:
           WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
           PR_URL: ${{ github.event.pull_request.html_url }}
           PR_AUTHOR: ${{ github.actor }}
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref }}
           REPO_NAME: ${{ github.repository }}
         run: |
+          CLEAN_BODY=$(printf '%s' "$PR_BODY" | tr -d '\r\n' | head -c 280)
+          if [ -z "$CLEAN_BODY" ]; then
+            CLEAN_BODY="Brak dodatkowego opisu."
+          fi
+
           PAYLOAD=$(jq -n \
-            --arg title "Nowy Pull Request w $REPO_NAME" \
-            --arg desc "**Tytuł:** $PR_TITLE\n\n**Autor:** $PR_AUTHOR" \
+            --arg repo "Nowy PR #${PR_NUMBER} • ${REPO_NAME}" \
+            --arg title "$PR_TITLE" \
+            --arg author "$PR_AUTHOR" \
+            --arg branches "${HEAD_REF} -> ${BASE_REF}" \
+            --arg desc "$CLEAN_BODY" \
             --arg url "$PR_URL" \
             '{
               type: "message",
@@ -30,15 +42,54 @@ jobs:
                     type: "AdaptiveCard",
                     version: "1.4",
                     body: [
-                      { type: "TextBlock", size: "Medium", weight: "Bolder", text: $title },
-                      { type: "TextBlock", text: $desc, wrap: true }
+                      {
+                        type: "TextBlock",
+                        text: $repo,
+                        size: "Small",
+                        weight: "Bolder",
+                        color: "Accent"
+                      },
+                      {
+                        type: "TextBlock",
+                        text: $title,
+                        size: "Large",
+                        weight: "Bolder",
+                        wrap: true,
+                        spacing: "Small"
+                      },
+                      {
+                        type: "FactSet",
+                        spacing: "Medium",
+                        facts: [
+                          {
+                            title: "Autor",
+                            value: $author
+                          },
+                          {
+                            title: "Gałęzie",
+                            value: $branches
+                          }
+                        ]
+                      },
+                      {
+                        type: "TextBlock",
+                        text: $desc,
+                        size: "Default",
+                        isSubtle: true,
+                        wrap: true,
+                        spacing: "Medium"
+                      }
                     ],
                     actions: [
-                      { type: "Action.OpenUrl", title: "Otwórz PR na GitHubie", url: $url }
+                      {
+                        type: "Action.OpenUrl",
+                        title: "Zobacz Pull Request",
+                        url: $url
+                      }
                     ]
                   }
                 }
               ]
             }')
 
-          curl -sS -X POST -H "Content-Type: application/json" -d "$PAYLOAD" "$WEBHOOK_URL"
+          curl -fsS -X POST -H "Content-Type: application/json" -d "$PAYLOAD" "$WEBHOOK_URL"
