@@ -9,10 +9,11 @@ Definition of Done określa warunki, które muszą zostać spełnione, aby zadan
 Zadanie można oznaczyć jako `Done`, jeśli:
 
 - [ ] Implementacja spełnia wymagania zadania.
-- [ ] Zmiany zostały wykonane na osobnym branchu nazwanym numerem Issue.
+- [ ] Zmiany zostały wykonane na osobnym branchu powiązanym z numerem Issue (np. `5-dor-and-dod`).
 - [ ] Utworzono Pull Request powiązany z odpowiednim GitHub Issue.
 - [ ] Pull Request uzyskał minimum jedną akceptację innego członka zespołu.
 - [ ] Zmiany zostały scalone z główną gałęzią repozytorium.
+- [ ] Aplikacja buduje się i uruchamia bez błędów.
 - [ ] Wykonano odpowiednie testy, jeśli dotyczą danego zadania.
 - [ ] Nie pozostały znane błędy blokujące działanie zrealizowanej funkcjonalności.
 - [ ] Dokumentacja została zaktualizowana, jeśli wymagały tego zmiany.

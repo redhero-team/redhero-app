@@ -38,8 +38,6 @@ Zadania w GitHub Projects przechodzą przez następujące statusy:
 
 ## Typy zadań
 
-## Typy zadań
-
 - `Feature` — nowa funkcjonalność lub rozszerzenie istniejącej.
 - `Bug` — błąd wymagający naprawienia.
 - `Task` — pozostałe prace techniczne, organizacyjne i utrzymaniowe.
@@ -56,13 +54,13 @@ Kolejność rozpatrywania zadań: High, następnie Medium, a na końcu Low.
 
 | Plik | Opis |
 |---|---|
-| `working-agreement.md` | Zasady współpracy i organizacji pracy |
-| `roles-and-responsibilities.md` | Role i odpowiedzialności |
-| `definition-of-ready.md` | Kryteria gotowości zadania |
-| `definition-of-done.md` | Kryteria ukończenia zadania |
-| `sprint-planning.md` | Planowanie sprintu |
-| `sprint-review.md` | Przegląd sprintu |
-| `sprint-retrospective.md` | Retrospektywa |
-| `sprint-report-template.md` | Szablon podsumowania sprintu |
+| [`working-agreement.md`](./working-agreement.md) | Zasady współpracy i organizacji pracy |
+| [`roles-and-responsibilities.md`](./roles-and-responsibilities.md) | Role i odpowiedzialności |
+| [`definition-of-ready.md`](./definition-of-ready.md) | Kryteria gotowości zadania |
+| [`definition-of-done.md`](./definition-of-done.md) | Kryteria ukończenia zadania |
+| [`sprint-planning.md`](./sprint-planning.md) | Planowanie sprintu |
+| [`sprint-review.md`](./sprint-review.md) | Przegląd sprintu |
+| [`sprint-retrospective.md`](./sprint-retrospective.md) | Retrospektywa |
+| [`sprint-report-template.md`](./sprint-report-template.md) | Szablon podsumowania sprintu |
 
 Dokumentacja może być aktualizowana w miarę rozwoju projektu i zdobywania doświadczenia przez zespół.

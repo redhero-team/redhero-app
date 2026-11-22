@@ -12,7 +12,7 @@
 
 - GitHub Issues służą do opisywania i śledzenia zadań.
 - GitHub Projects służy do monitorowania postępu prac.
-- Każde zadanie powinno mieć przypisanego właściciela (`Assignee`).
+- Każde zadanie w sprincie (od statusu In Progress) musi mieć przypisanego właściciela (Assignee).
 - Każde zadanie powinno mieć określony typ i priorytet.
 - Przed rozpoczęciem realizacji zadanie powinno mieć status `Ready`.
 - Status zadania aktualizujemy w miarę postępu prac.
@@ -34,6 +34,7 @@ Typ zadania:
 - `Feature` — funkcjonalność.
 - `Bug` — błąd.
 - `Task` — prace techniczne, organizacyjne i utrzymaniowe.
+
 Priorytet:
 
 - `High` — najwyższy.
@@ -56,12 +57,16 @@ Typ zadania i etykieta pełnią różne funkcje. Typ określa rodzaj zadania, a 
 ## 6. Praca z kodem
 
 - Każde zadanie realizujemy na osobnym branchu.
-- Nazwa brancha jest numerem powiązanego GitHub Issue, np. `123`.
+- Nazwa brancha zawiera numer powiązanego GitHub Issue (np. `5-dor-and-dod` lub `123`).
 - Nie wprowadzamy zmian bezpośrednio do głównej gałęzi repozytorium.
 - Zmiany przekazujemy przez Pull Request.
 - Każdy Pull Request wymaga minimum jednej akceptacji innego członka zespołu.
 - Autor Pull Requesta nie zatwierdza własnych zmian.
 - Pull Request powinien być powiązany z odpowiednim GitHub Issue.
+- Pracujemy w oparciu o uproszczony GitHub Flow (osobny branch per zadanie → Pull Request → merge do `main`).
+- Wiadomości commitów powinny być krótkie i zrozumiałe, np. `#12 Dodany formularz rejestracji`.
+- O nowym Pull Requeście informujemy na Teams i staramy się zrobić Code Review w ciągu 24–48 godzin.
+- Akceptację (Approve) wystawiamy, gdy zmiany spełniają wymagania zadania, kod jest czytelny i nie ma uwag blokujących.
 
 ## 7. Spotkania
 
