@@ -1,0 +1,44 @@
+name: Powiadomienie Teams o PR
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  notify-teams:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wyślij powiadomienie na Teams
+        env:
+          WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_AUTHOR: ${{ github.actor }}
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          PAYLOAD=$(jq -n \
+            --arg title "Nowy Pull Request w $REPO_NAME" \
+            --arg desc "**Tytuł:** $PR_TITLE\n\n**Autor:** $PR_AUTHOR" \
+            --arg url "$PR_URL" \
+            '{
+              type: "message",
+              attachments: [
+                {
+                  contentType: "application/vnd.microsoft.card.adaptive",
+                  content: {
+                    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                    type: "AdaptiveCard",
+                    version: "1.4",
+                    body: [
+                      { type: "TextBlock", size: "Medium", weight: "Bolder", text: $title },
+                      { type: "TextBlock", text: $desc, wrap: true }
+                    ],
+                    actions: [
+                      { type: "Action.OpenUrl", title: "Otwórz PR na GitHubie", url: $url }
+                    ]
+                  }
+                }
+              ]
+            }')
+
+          curl -sS -X POST -H "Content-Type: application/json" -d "$PAYLOAD" "$WEBHOOK_URL"
