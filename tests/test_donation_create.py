@@ -141,6 +141,7 @@ def test_valid_donation_is_saved_for_logged_in_user(logged_client, donor, whole_
     assert donation.facility == facility
     assert donation.notes == "Bez problemów"
     assert "Zapisano donację" in response.content.decode()
+    assert response.redirect_chain[-1] == (reverse("donation_list"), 302)
 
 
 def test_cannot_add_donation_for_another_user(

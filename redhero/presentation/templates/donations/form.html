@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Zarejestruj donację – RedHero{% endblock %}
+{% block title %}{{ title }} – RedHero{% endblock %}
 
 {% block content %}
   <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
-      <h1 class="h3 mb-3">Zarejestruj donację</h1>
+      <h1 class="h3 mb-3">{{ title }}</h1>
 
       {% if form.non_field_errors %}
         <div class="alert alert-danger" role="alert">{{ form.non_field_errors|join:" " }}</div>
@@ -21,7 +21,10 @@
         {% include "partials/field.html" with field=form.facility %}
         {% include "partials/field.html" with field=form.location_text %}
         {% include "partials/field.html" with field=form.notes %}
-        <button type="submit" class="btn btn-danger w-100">Zapisz donację</button>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-danger flex-grow-1">Zapisz donację</button>
+          <a class="btn btn-outline-secondary" href="{% url 'donation_list' %}">Anuluj</a>
+        </div>
       </form>
     </div>
   </div>
