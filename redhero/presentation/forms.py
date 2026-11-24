@@ -6,6 +6,7 @@ a formularz tylko je wywołuje i przypina błąd do właściwego pola.
 
 from django import forms
 from django.contrib.auth import get_user_model, password_validation
+from django.contrib.auth.forms import AuthenticationForm
 
 from redhero.services import accounts
 
@@ -95,3 +96,17 @@ class DonorRegistrationForm(BootstrapFormMixin, forms.Form):
             date_of_birth=data["date_of_birth"],
             sex=data["sex"],
         )
+
+
+class LoginForm(BootstrapFormMixin, AuthenticationForm):
+    """Logowanie e-mailem. Komunikat błędu nie zdradza, czy konto o tym e-mailu istnieje."""
+
+    error_messages = {
+        "invalid_login": "Nieprawidłowy e-mail lub hasło.",
+        "inactive": "Nieprawidłowy e-mail lub hasło.",
+    }
+
+    def __init__(self, request=None, *args, **kwargs):
+        super().__init__(request, *args, **kwargs)
+        self.fields["username"].label = "Adres e-mail"
+        self.fields["username"].widget.attrs.update({"type": "email", "autocomplete": "email"})

@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1 class="h3">Witaj w RedHero</h1>
-  <p class="text-body-secondary">Aplikacja dla krwiodawców. Szkielet projektu działa.</p>
+  <div class="py-4 text-center">
+    <h1 class="display-6 fw-bold">Witaj w RedHero</h1>
+    <p class="lead text-body-secondary">Prowadź dziennik donacji, licz oddaną krew
+      i sprawdzaj, kiedy znów możesz pomóc.</p>
+    <a class="btn btn-danger btn-lg me-2" href="{% url 'register' %}">Zarejestruj się</a>
+    <a class="btn btn-outline-danger btn-lg" href="{% url 'login' %}">Zaloguj się</a>
+  </div>
 {% endblock %}

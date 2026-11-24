@@ -12,8 +12,14 @@
       <a class="navbar-brand fw-bold" href="{% url 'home' %}">RedHero</a>
       <div class="navbar-nav ms-auto">
         {% if user.is_authenticated %}
-          <span class="navbar-text">{{ user.email }}</span>
+          <a class="nav-link" href="{% url 'dashboard' %}">Panel</a>
+          <span class="navbar-text mx-2 d-none d-sm-inline">{{ user.email }}</span>
+          <form method="post" action="{% url 'logout' %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-link nav-link">Wyloguj</button>
+          </form>
         {% else %}
+          <a class="nav-link" href="{% url 'login' %}">Zaloguj się</a>
           <a class="nav-link" href="{% url 'register' %}">Zarejestruj się</a>
         {% endif %}
       </div>
