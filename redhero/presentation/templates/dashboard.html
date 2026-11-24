@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Panel dawcy – RedHero{% endblock %}
+
+{% block content %}
+  <h1 class="h3">Cześć, {{ user.first_name|default:user.email }}!</h1>
+  <p class="text-body-secondary">To Twój panel dawcy. Wkrótce zobaczysz tu sumę oddanej krwi,
+    postęp do odznaki i termin kolejnej donacji.</p>
+{% endblock %}

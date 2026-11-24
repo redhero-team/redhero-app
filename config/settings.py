@@ -84,6 +84,13 @@ DATABASES = {
 # MUSI istnieć przed pierwszą migracją, późniejsza zmiana jest bardzo kosztowna.
 AUTH_USER_MODEL = "redhero.User"
 
+# Logowanie e-mailem bez względu na wielkość liter (Anna@x.pl == anna@x.pl)
+AUTHENTICATION_BACKENDS = ["redhero.services.auth.EmailBackend"]
+
+# Niezalogowany użytkownik wchodzący na stronę dawcy trafia na logowanie
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "dashboard"
+
 # Argon2 jako główny algorytm hashowania haseł, PBKDF2 jako fallback
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.Argon2PasswordHasher",

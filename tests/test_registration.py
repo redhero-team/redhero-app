@@ -85,6 +85,7 @@ def test_successful_registration_creates_user_and_logs_in(client):
     response = post_register(client)
 
     assert response.status_code == 302
+    assert response.url == reverse("dashboard")
     user = User.objects.get(email="anna@example.com")
     assert user.first_name == "Anna"
     assert user.date_of_birth == date(1995, 4, 12)
@@ -138,5 +139,5 @@ def test_logged_in_user_is_redirected_from_registration(client):
 
     response = client.get(reverse("register"), follow=True)
 
-    assert response.redirect_chain[-1] == (reverse("home"), 302)
+    assert response.redirect_chain[-1] == (reverse("dashboard"), 302)
     assert "Jesteś już zalogowany jako jan@example.com" in response.content.decode()
