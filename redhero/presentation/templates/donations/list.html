@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Dziennik donacji – RedHero{% endblock %}
+
+{% block content %}
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="h3 mb-0">Dziennik donacji</h1>
+    <a class="btn btn-danger" href="{% url 'donation_create' %}">Zarejestruj donację</a>
+  </div>
+
+  {% if page.paginator.count %}
+    <p class="text-body-secondary">Liczba donacji: {{ page.paginator.count }}</p>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th scope="col">Data</th>
+            <th scope="col">Rodzaj</th>
+            <th scope="col" class="text-end">Objętość</th>
+            <th scope="col">Miejsce</th>
+            <th scope="col"><span class="visually-hidden">Akcje</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for donation in page %}
+            <tr>
+              <td class="text-nowrap">{{ donation.donation_date|date:"d.m.Y" }}</td>
+              <td>{{ donation.donation_type.name }}</td>
+              <td class="text-end text-nowrap">{{ donation.volume_ml }} ml</td>
+              <td>
+                {{ donation.place }}
+                {% if donation.notes %}<div class="small text-body-secondary">{{ donation.notes|truncatechars:80 }}</div>{% endif %}
+              </td>
+              <td class="text-end text-nowrap">
+                <a class="btn btn-sm btn-outline-secondary" href="{% url 'donation_update' donation.pk %}">Edytuj</a>
+                <a class="btn btn-sm btn-outline-danger" href="{% url 'donation_delete' donation.pk %}">Usuń</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if page.has_other_pages %}
+      <nav aria-label="Strony dziennika">
+        <ul class="pagination">
+          {% if page.has_previous %}
+            <li class="page-item"><a class="page-link" href="?strona={{ page.previous_page_number }}">Nowsze</a></li>
+          {% endif %}
+          <li class="page-item disabled"><span class="page-link">Strona {{ page.number }} z {{ page.paginator.num_pages }}</span></li>
+          {% if page.has_next %}
+            <li class="page-item"><a class="page-link" href="?strona={{ page.next_page_number }}">Starsze</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  {% else %}
+    <div class="text-center py-5 border rounded">
+      <p class="lead mb-3">Nie masz jeszcze żadnych donacji w dzienniku.</p>
+      <a class="btn btn-danger" href="{% url 'donation_create' %}">Dodaj pierwszą donację</a>
+    </div>
+  {% endif %}
+{% endblock %}

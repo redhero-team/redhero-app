@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+from django.core.paginator import Paginator
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -9,6 +10,8 @@ from django.views.decorators.http import require_POST
 from redhero.services import donations
 
 from .forms import DonationForm, DonorRegistrationForm, LoginForm
+
+DONATIONS_PER_PAGE = 20
 
 
 def home(request):
@@ -56,12 +59,18 @@ def dashboard(request):
 
 
 @login_required
+def donation_list(request):
+    """Dziennik donacji zalogowanego dawcy, od najnowszej, po 20 na stronę."""
+    page = Paginator(donations.donations_for(request.user), DONATIONS_PER_PAGE).get_page(
+        request.GET.get("strona")
+    )
+    return render(request, "donations/list.html", {"page": page})
+
+
+@login_required
 def donation_create(request):
     """Formularz „Zarejestruj donację” dla zalogowanego dawcy."""
-    form = DonationForm(
-        request.POST or None,
-        initial={"donation_date": timezone.localdate()},
-    )
+    form = DonationForm(request.POST or None, initial={"donation_date": timezone.localdate()})
     if request.method == "POST" and form.is_valid():
         donation = form.save(commit=False)
         # ostrzeżenie liczymy przed zapisem, żeby nie porównywać donacji z nią samą
@@ -72,13 +81,46 @@ def donation_create(request):
         messages.success(request, f"Zapisano donację: {donation}.")
         if warning:
             messages.warning(request, warning)
-        # TODO(#45): przekierować do dziennika donacji
-        return redirect("dashboard")
+        return redirect("donation_list")
 
+    return _render_donation_form(request, form, title="Zarejestruj donację")
+
+
+@login_required
+def donation_update(request, pk):
+    """Edycja donacji. Cudza donacja daje 404 (serwis filtruje po dawcy)."""
+    donation = donations.get_donation_for(request.user, pk)
+    form = DonationForm(request.POST or None, instance=donation)
+    if request.method == "POST" and form.is_valid():
+        donation = form.save(commit=False)
+        warning = donations.interval_warning(
+            request.user, donation.donation_type, donation.donation_date, exclude_pk=donation.pk
+        )
+        donations.update_donation(request.user, donation)
+        messages.success(request, f"Zapisano zmiany: {donation}.")
+        if warning:
+            messages.warning(request, warning)
+        return redirect("donation_list")
+
+    return _render_donation_form(request, form, title="Edytuj donację")
+
+
+@login_required
+def donation_delete(request, pk):
+    """GET pokazuje stronę z potwierdzeniem, POST usuwa donację."""
+    donation = donations.get_donation_for(request.user, pk)
+    if request.method == "POST":
+        donations.delete_donation(request.user, donation)
+        messages.success(request, f"Usunięto donację: {donation}.")
+        return redirect("donation_list")
+    return render(request, "donations/confirm_delete.html", {"donation": donation})
+
+
+def _render_donation_form(request, form, *, title):
     return render(
         request,
         "donations/form.html",
-        {"form": form, "default_volumes": _default_volumes()},
+        {"form": form, "title": title, "default_volumes": _default_volumes()},
     )
 
 

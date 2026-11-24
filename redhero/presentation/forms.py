@@ -136,7 +136,12 @@ class DonationForm(BootstrapFormMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # w formularzu tylko aktywne rodzaje i placówki
-        self.fields["donation_type"].queryset = donations.active_donation_types()
+        # przy edycji zostawiamy też obecny rodzaj i placówkę, nawet jeśli admin je wyłączył
+        self.fields["donation_type"].queryset = donations.active_donation_types(
+            include_pk=self.instance.donation_type_id
+        )
         self.fields["donation_type"].empty_label = "— wybierz —"
-        self.fields["facility"].queryset = donations.active_facilities()
+        self.fields["facility"].queryset = donations.active_facilities(
+            include_pk=self.instance.facility_id
+        )
         self.fields["facility"].empty_label = "— inne miejsce (wpisz poniżej) —"

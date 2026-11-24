@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Usuń donację – RedHero{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <h1 class="h3 mb-3">Usunąć donację?</h1>
+      <div class="card mb-3">
+        <div class="card-body">
+          <p class="mb-1"><strong>{{ donation.donation_type.name }}</strong>, {{ donation.donation_date|date:"d.m.Y" }}</p>
+          <p class="mb-0 text-body-secondary">{{ donation.volume_ml }} ml · {{ donation.place }}</p>
+        </div>
+      </div>
+      <p>Tej operacji nie da się cofnąć. Donacja przestanie się liczyć do sumy oddanej krwi i odznak.</p>
+      <form method="post" class="d-flex gap-2">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger flex-grow-1">Tak, usuń</button>
+        <a class="btn btn-outline-secondary" href="{% url 'donation_list' %}">Anuluj</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}
