@@ -2,7 +2,7 @@
 
 ## 1. Informacje podstawowe
 
-- Długość sprintu: 3 tygodnie.
+- Długość sprintu: 2 tygodnie.
 - Uczestnicy: cały zespół ( w miare możliwości).
 - Komunikacja: Microsoft Teams.
 - Zarządzanie zadaniami: GitHub Projects.
@@ -32,8 +32,8 @@ Obowiązują wartości:
 
 | Wartość | Znaczenie |
 |---|---|
-| 1 | Około 1 tygodnia |
-| 2 | Około 2 tygodni |
+| 1 | Około 1-3 dni pracy |
+| 2 | Około 1 tydzień pracy |
 | 3 | Zakres obejmujący praktycznie cały sprint |
 
 W przypadku dużych rozbieżności w estymacji zespół omawia różnice i ponownie ocenia zadanie.

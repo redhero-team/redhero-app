@@ -28,7 +28,7 @@ Product Owner pełni również funkcję Scrum Mastera.
 | Komunikacja i spotkania | Microsoft Teams |
 | Estymacja | Planning Poker |
 | Retrospektywa | Lucidspark |
-| Długość sprintu | 3 tygodnie |
+| Długość sprintu | 2 tygodnie |
 
 ## Statusy zadań
 

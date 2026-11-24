@@ -23,8 +23,8 @@ Stosowana skala:
 
 | Wartość | Znaczenie |
 |---|---|
-| 1 | Około 1 tygodnia pracy |
-| 2 | Około 2 tygodni pracy |
+| 1 | Około 1-3 dni pracy |
+| 2 | Około 1 tydzień pracy |
 | 3 | Zakres obejmujący praktycznie cały sprint |
 
 Estymacja jest orientacyjną oceną zakresu pracy zespołu, a nie gwarancją czasu realizacji.
