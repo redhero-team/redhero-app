@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Rejestracja – RedHero{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <h1 class="h3 mb-3">Zarejestruj się jako dawca</h1>
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors|join:" " }}</div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-sm-6">{% include "partials/field.html" with field=form.first_name %}</div>
+          <div class="col-sm-6">{% include "partials/field.html" with field=form.last_name %}</div>
+        </div>
+        {% include "partials/field.html" with field=form.email %}
+        <div class="row">
+          <div class="col-sm-6">{% include "partials/field.html" with field=form.date_of_birth %}</div>
+          <div class="col-sm-6">{% include "partials/field.html" with field=form.sex %}</div>
+        </div>
+        {% include "partials/field.html" with field=form.password1 %}
+        {% include "partials/field.html" with field=form.password2 %}
+        <button type="submit" class="btn btn-danger w-100">Załóż konto</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

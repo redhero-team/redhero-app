@@ -34,15 +34,19 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    """Użytkownik aplikacji (dawca lub administrator).
+    """Użytkownik aplikacji (dawca lub administrator)."""
 
-    Pola z formularza rejestracji (data urodzenia, płeć) dodamy w Sprincie 1
-    razem z historyjką o rejestracji. Dodanie pól to zwykła migracja,
-    natomiast podmiana całego modelu użytkownika byłaby bardzo kosztowna.
-    """
+    class Sex(models.TextChoices):
+        # progi odznak HDK i limity donacji różnią się dla kobiet i mężczyzn
+        FEMALE = "K", "kobieta"
+        MALE = "M", "mężczyzna"
 
     username = None
     email = models.EmailField("adres e-mail", unique=True)
+    # W bazie pola są opcjonalne, bo konto admina zakładane z konsoli ich nie ma.
+    # Dla dawcy są wymagane w formularzu rejestracji.
+    date_of_birth = models.DateField("data urodzenia", null=True, blank=True)
+    sex = models.CharField("płeć", max_length=1, choices=Sex.choices, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

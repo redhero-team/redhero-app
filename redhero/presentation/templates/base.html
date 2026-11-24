@@ -10,10 +10,22 @@
   <nav class="navbar navbar-expand bg-danger" data-bs-theme="dark">
     <div class="container">
       <a class="navbar-brand fw-bold" href="{% url 'home' %}">RedHero</a>
+      <div class="navbar-nav ms-auto">
+        {% if user.is_authenticated %}
+          <span class="navbar-text">{{ user.email }}</span>
+        {% else %}
+          <a class="nav-link" href="{% url 'register' %}">Zarejestruj się</a>
+        {% endif %}
+      </div>
     </div>
   </nav>
 
   <main class="container py-4">
+    {% for message in messages %}
+      <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
     {% block content %}{% endblock %}
   </main>
 
