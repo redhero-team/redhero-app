@@ -51,6 +51,7 @@ W projekcie stosujemy następujące etykiety:
 - `testing` — zadania związane z testowaniem.
 - `onboarding` — zadania związane z wdrożeniem członków zespołu.
 - `development` — zadania związane z pracami implementacyjnymi.
+- `must`, `should`, `could`, `wont` — priorytet biznesowy wg metody MoSCoW (must = konieczne w MVP, should = ważne, could = opcjonalne, wont = poza zakresem wydania). Etykiety MoSCoW są niezależne od priorytetu High/Medium/Low ustawianego w GitHub Projects.
 
 Typ zadania i etykieta pełnią różne funkcje. Typ określa rodzaj zadania, a etykieta pozwala dodatkowo je sklasyfikować.
 
