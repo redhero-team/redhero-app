@@ -8,4 +8,5 @@ urlpatterns = [
     path("logowanie/", views.DonorLoginView.as_view(), name="login"),
     path("wyloguj/", views.logout_view, name="logout"),
     path("panel/", views.dashboard, name="dashboard"),
+    path("donacje/nowa/", views.donation_create, name="donation_create"),
 ]

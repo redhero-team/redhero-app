@@ -3,9 +3,12 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from .forms import DonorRegistrationForm, LoginForm
+from redhero.services import donations
+
+from .forms import DonationForm, DonorRegistrationForm, LoginForm
 
 
 def home(request):
@@ -50,3 +53,38 @@ def logout_view(request):
 def dashboard(request):
     """Panel dawcy. Liczniki, odznaki i termin kolejnej donacji dojdą w #40."""
     return render(request, "dashboard.html")
+
+
+@login_required
+def donation_create(request):
+    """Formularz „Zarejestruj donację” dla zalogowanego dawcy."""
+    form = DonationForm(
+        request.POST or None,
+        initial={"donation_date": timezone.localdate()},
+    )
+    if request.method == "POST" and form.is_valid():
+        donation = form.save(commit=False)
+        # ostrzeżenie liczymy przed zapisem, żeby nie porównywać donacji z nią samą
+        warning = donations.interval_warning(
+            request.user, donation.donation_type, donation.donation_date
+        )
+        donations.create_donation(request.user, donation)
+        messages.success(request, f"Zapisano donację: {donation}.")
+        if warning:
+            messages.warning(request, warning)
+        # TODO(#45): przekierować do dziennika donacji
+        return redirect("dashboard")
+
+    return render(
+        request,
+        "donations/form.html",
+        {"form": form, "default_volumes": _default_volumes()},
+    )
+
+
+def _default_volumes():
+    """Typowa objętość każdego rodzaju: skrypt w formularzu podpowiada ją po wyborze rodzaju."""
+    return {
+        str(t.pk): {"default": t.default_volume_ml, "min": t.min_volume_ml, "max": t.max_volume_ml}
+        for t in donations.active_donation_types()
+    }
