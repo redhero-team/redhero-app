@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Panel administratora – RedHero{% endblock %}
+
+{% block content %}
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <h1 class="h3 mb-0">Panel administratora</h1>
+    <a class="btn btn-outline-secondary" href="{% url 'admin:index' %}">Zarządzaj danymi (słowniki, donacje)</a>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="card h-100"><div class="card-body">
+        <div class="text-body-secondary small">Aktywni użytkownicy</div>
+        <div class="fs-3 fw-bold">{{ summary.users_count }}</div>
+        <div class="small text-body-secondary">w tym {{ summary.donors_with_donations }} z donacjami</div>
+      </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card h-100"><div class="card-body">
+        <div class="text-body-secondary small">Donacje łącznie</div>
+        <div class="fs-3 fw-bold">{{ summary.donations_count }}</div>
+      </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card h-100"><div class="card-body">
+        <div class="text-body-secondary small">Ostatnie {{ summary.recent_days }} dni</div>
+        <div class="fs-3 fw-bold">{{ summary.recent_donations_count }}</div>
+        <div class="small text-body-secondary">donacji</div>
+      </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card h-100"><div class="card-body">
+        <div class="text-body-secondary small">Zebrana objętość</div>
+        <div class="fs-3 fw-bold">{{ summary.total_volume_ml }} ml</div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <h2 class="h5">Donacje według rodzaju</h2>
+      {% if summary.by_type %}
+        <table class="table">
+          <thead><tr><th scope="col">Rodzaj</th><th scope="col" class="text-end">Liczba</th><th scope="col" class="text-end">Objętość</th></tr></thead>
+          <tbody>
+            {% for row in summary.by_type %}
+              <tr><td>{{ row.name }}</td><td class="text-end">{{ row.count }}</td><td class="text-end">{{ row.volume }} ml</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="text-body-secondary">Brak donacji.</p>
+      {% endif %}
+    </div>
+    <div class="col-lg-6">
+      <h2 class="h5">Najnowsi użytkownicy</h2>
+      <ul class="list-group">
+        {% for new_user in summary.newest_users %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ new_user.email }}</span>
+            <span class="text-body-secondary small">{{ new_user.date_joined|date:"d.m.Y" }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endblock %}

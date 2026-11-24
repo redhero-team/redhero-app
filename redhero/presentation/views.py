@@ -1,17 +1,33 @@
+from functools import wraps
+
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from redhero.services import donations
+from redhero.services import donations, roles, stats
 
 from .forms import DonationForm, DonorRegistrationForm, LoginForm
 
 DONATIONS_PER_PAGE = 20
+
+
+def admin_required(view):
+    """Tylko dla roli ADMIN: gość trafia na logowanie, a zwykły dawca dostaje 403."""
+
+    @login_required
+    @wraps(view)
+    def wrapper(request, *args, **kwargs):
+        if not roles.is_admin(request.user):
+            raise PermissionDenied
+        return view(request, *args, **kwargs)
+
+    return wrapper
 
 
 def home(request):
@@ -130,3 +146,9 @@ def _default_volumes():
         str(t.pk): {"default": t.default_volume_ml, "min": t.min_volume_ml, "max": t.max_volume_ml}
         for t in donations.active_donation_types()
     }
+
+
+@admin_required
+def admin_dashboard(request):
+    """Dashboard administratora z podstawowymi statystykami."""
+    return render(request, "admin_dashboard.html", {"summary": stats.admin_summary()})
