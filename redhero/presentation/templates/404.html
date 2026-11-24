@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Nie znaleziono – RedHero{% endblock %}
+
+{% block content %}
+  <div class="text-center py-5">
+    <h1 class="h3">Nie znaleziono strony</h1>
+    <p class="text-body-secondary">Taka strona nie istnieje albo nie masz do niej dostępu.</p>
+    <a class="btn btn-danger" href="{% url 'home' %}">Wróć na stronę główną</a>
+  </div>
+{% endblock %}

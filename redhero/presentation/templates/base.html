@@ -15,6 +15,9 @@
           <a class="nav-link" href="{% url 'dashboard' %}">Panel</a>
           <a class="nav-link" href="{% url 'donation_list' %}">Dziennik</a>
           <a class="nav-link" href="{% url 'donation_create' %}">Zarejestruj donację</a>
+          {% if is_admin %}
+            <a class="nav-link" href="{% url 'admin_dashboard' %}">Panel admina</a>
+          {% endif %}
           <span class="navbar-text mx-2 d-none d-sm-inline">{{ user.email }}</span>
           <form method="post" action="{% url 'logout' %}" class="d-inline">
             {% csrf_token %}

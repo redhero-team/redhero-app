@@ -7,6 +7,8 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.utils import timezone
 
+from . import roles
+
 # Kandydat na dawcę krwi w Polsce musi mieć ukończone 18 lat.
 MIN_DONOR_AGE = 18
 # Zabezpieczenie przed literówką w roku (np. 1094 zamiast 1994).
@@ -49,7 +51,7 @@ def register_donor(
     sex: str,
 ):
     """Tworzy konto dawcy. Dane muszą być już zwalidowane przez formularz."""
-    return get_user_model().objects.create_user(
+    user = get_user_model().objects.create_user(
         email=email.strip(),
         password=password,
         first_name=first_name.strip(),
@@ -57,3 +59,5 @@ def register_donor(
         date_of_birth=date_of_birth,
         sex=sex,
     )
+    roles.set_role(user, roles.ROLE_USER)  # każdy nowy dawca ma rolę USER
+    return user
