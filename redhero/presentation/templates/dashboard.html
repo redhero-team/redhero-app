@@ -6,4 +6,5 @@
   <h1 class="h3">Cześć, {{ user.first_name|default:user.email }}!</h1>
   <p class="text-body-secondary">To Twój panel dawcy. Wkrótce zobaczysz tu sumę oddanej krwi,
     postęp do odznaki i termin kolejnej donacji.</p>
+  <a class="btn btn-danger" href="{% url 'donation_create' %}">Zarejestruj donację</a>
 {% endblock %}

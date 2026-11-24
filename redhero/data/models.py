@@ -216,3 +216,10 @@ class Donation(TimeStampedModel):
 
         if errors:
             raise ValidationError(errors)
+
+    def validate_constraints(self, exclude=None):
+        # Reguły „placówka albo miejsce” i „objętość > 0” sprawdza już clean()
+        # i przypina błąd do konkretnego pola. Bez tego formularz pokazałby
+        # ten sam błąd drugi raz, ogólnie nad formularzem. Baza dalej ich pilnuje.
+        exclude = {*(exclude or ()), "location_text", "volume_ml"}
+        super().validate_constraints(exclude=exclude)

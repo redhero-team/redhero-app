@@ -8,7 +8,8 @@ from django import forms
 from django.contrib.auth import get_user_model, password_validation
 from django.contrib.auth.forms import AuthenticationForm
 
-from redhero.services import accounts
+from redhero.data.models import Donation
+from redhero.services import accounts, donations
 
 User = get_user_model()
 
@@ -110,3 +111,32 @@ class LoginForm(BootstrapFormMixin, AuthenticationForm):
         super().__init__(request, *args, **kwargs)
         self.fields["username"].label = "Adres e-mail"
         self.fields["username"].widget.attrs.update({"type": "email", "autocomplete": "email"})
+
+
+class DonationForm(BootstrapFormMixin, forms.ModelForm):
+    """Formularz donacji. Walidację (data, objętość, miejsce) robi `Donation.clean()`."""
+
+    class Meta:
+        model = Donation
+        # bez pola `user`: właściciela ustawia serwis na podstawie zalogowanego dawcy
+        fields = [
+            "donation_type",
+            "donation_date",
+            "volume_ml",
+            "facility",
+            "location_text",
+            "notes",
+        ]
+        widgets = {
+            "donation_date": forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
+            "volume_ml": forms.NumberInput(attrs={"min": 1, "step": 1}),
+            "notes": forms.Textarea(attrs={"rows": 3}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # w formularzu tylko aktywne rodzaje i placówki
+        self.fields["donation_type"].queryset = donations.active_donation_types()
+        self.fields["donation_type"].empty_label = "— wybierz —"
+        self.fields["facility"].queryset = donations.active_facilities()
+        self.fields["facility"].empty_label = "— inne miejsce (wpisz poniżej) —"

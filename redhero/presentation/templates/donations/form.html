@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Zarejestruj donację – RedHero{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <h1 class="h3 mb-3">Zarejestruj donację</h1>
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">{{ form.non_field_errors|join:" " }}</div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-sm-6">{% include "partials/field.html" with field=form.donation_type %}</div>
+          <div class="col-sm-6">{% include "partials/field.html" with field=form.donation_date %}</div>
+        </div>
+        {% include "partials/field.html" with field=form.volume_ml %}
+        {% include "partials/field.html" with field=form.facility %}
+        {% include "partials/field.html" with field=form.location_text %}
+        {% include "partials/field.html" with field=form.notes %}
+        <button type="submit" class="btn btn-danger w-100">Zapisz donację</button>
+      </form>
+    </div>
+  </div>
+
+  {{ default_volumes|json_script:"default-volumes" }}
+  <script>
+    // Po wyborze rodzaju podpowiada typową objętość i ustawia zakres pola.
+    // Walidacja i tak odbywa się na serwerze, to tylko wygoda.
+    (function () {
+      const volumes = JSON.parse(document.getElementById("default-volumes").textContent);
+      const type = document.getElementById("{{ form.donation_type.id_for_label }}");
+      const volume = document.getElementById("{{ form.volume_ml.id_for_label }}");
+      let suggested = null;  // ostatnio podpowiedziana wartość
+      type.addEventListener("change", function () {
+        const v = volumes[type.value];
+        if (!v) return;
+        volume.min = v.min;
+        volume.max = v.max;
+        volume.placeholder = v.min + "–" + v.max + " ml";
+        // nie nadpisujemy objętości wpisanej ręcznie przez dawcę
+        if (!volume.value || volume.value === suggested) {
+          volume.value = v.default;
+          suggested = String(v.default);
+        }
+      });
+    })();
+  </script>
+{% endblock %}
